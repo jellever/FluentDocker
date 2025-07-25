@@ -121,7 +121,7 @@ jobs:
 
       # Single SonarCloud scan step for both environments
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ steps.sonar-env.outputs.token }}
