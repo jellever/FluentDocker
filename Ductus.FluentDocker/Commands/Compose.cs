@@ -43,7 +43,7 @@ namespace Ductus.FluentDocker.Commands
           throw new FluentDockerException(
             $"Requested compose version {version} but only V1 is available. Use the overload that accepts ComposeVersion to specify the version.");
         }
-        
+
         // For V1, we use the traditional docker-compose binary
         return ("docker-compose".ResolveBinary(), "");
       }
@@ -61,15 +61,16 @@ namespace Ductus.FluentDocker.Commands
 
       var (binary, command) = GetComposeCommand();
 
-      var args = $"{host.RenderBaseArgs(certificates)}";
+      var dockerArgs = $"{host.RenderBaseArgs(certificates)}";
+      var dockerComposeArgs = "";
 
       if (null != composeFile && 0 != composeFile.Length)
         foreach (var cf in composeFile)
           if (!string.IsNullOrEmpty(cf))
-            args += $" -f \"{cf}\"";
+            dockerComposeArgs += $" -f \"{cf}\"";
 
       if (!string.IsNullOrEmpty(altProjectName))
-        args += $" -p {altProjectName}";
+        dockerComposeArgs += $" -p {altProjectName}";
 
       var options = string.Empty;
       if (forceRm)
@@ -87,7 +88,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} build {options}",
+          $"{dockerArgs} {(string.IsNullOrEmpty(command) ? "" : command + " ")}{dockerComposeArgs} build {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -130,7 +131,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} create {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} create {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -158,7 +159,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} start -d {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} start -d {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -189,7 +190,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} kill {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} kill {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -220,7 +221,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} stop {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} stop {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -248,7 +249,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} pause {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} pause {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -276,7 +277,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} unpause {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} unpause {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -310,7 +311,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} scale {options} {services}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} scale {options} {services}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -338,7 +339,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} version {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} version {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -371,7 +372,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} restart {options} {ids}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} restart {options} {ids}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -398,7 +399,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} port {containerId} {privatePortAndProto}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} port {containerId} {privatePortAndProto}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -430,7 +431,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} config {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} config {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -466,7 +467,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} down {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} down {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -530,15 +531,21 @@ namespace Ductus.FluentDocker.Commands
       var cwd = WorkingDirectory(ca.ComposeFiles.ToArray());
       var (binary, command) = GetComposeCommand();
 
-      var args = $"{host.RenderBaseArgs(ca.Certificates)}";
+      var dockerArgs = $"{host.RenderBaseArgs(ca.Certificates)}";
+      var composeArgs = "";
 
       if (null != ca.ComposeFiles && 0 != ca.ComposeFiles.Count)
         foreach (var cf in ca.ComposeFiles)
           if (!string.IsNullOrEmpty(cf))
-            args += $" -f \"{cf}\"";
+            composeArgs += $" -f \"{cf}\"";
 
       if (!string.IsNullOrEmpty(ca.AltProjectName))
-        args += $" -p {ca.AltProjectName}";
+        composeArgs += $" -p {ca.AltProjectName}";
+
+      if (!string.IsNullOrEmpty(ca.ProjectDirectory))
+      {
+        composeArgs += $" --project-directory {ca.ProjectDirectory.Rendered}";
+      }
 
       var options = ca.NoStart ? "--no-start" : "--detach";
 
@@ -569,18 +576,13 @@ namespace Ductus.FluentDocker.Commands
       if (ca.RemoveOrphans)
         options += " --remove-orphans";
 
-      if (!string.IsNullOrEmpty(ca.ProjectDirectory))
-      {
-        options += $" --project-directory {ca.ProjectDirectory.Rendered}";
-      }
-
       if (null != ca.Services && 0 != ca.Services.Count)
         options += " " + string.Join(" ", ca.Services);
 
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} up {options}", 
+          $"{dockerArgs} {(string.IsNullOrEmpty(command) ? "" : command + " ")}{composeArgs} up {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(ca.Env).Execute();
     }
 
@@ -618,7 +620,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} rm {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} rm {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -646,7 +648,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} ps -q {options}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} ps -q {options}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(env).Execute();
     }
 
@@ -686,7 +688,7 @@ namespace Ductus.FluentDocker.Commands
       return
         new ProcessExecutor<StringListResponseParser, IList<string>>(
           binary,
-          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} pull {options} {string.Join(" ", commandArgs.Services ?? new string[0])}", 
+          $"{(string.IsNullOrEmpty(command) ? "" : command + " ")}{args} pull {options} {string.Join(" ", commandArgs.Services ?? new string[0])}",
           cwd.NeedCwd ? cwd.Cwd : null).ExecutionEnvironment(commandArgs.Env).Execute();
     }
 
