@@ -544,7 +544,7 @@ namespace Ductus.FluentDocker.Commands
 
       if (!string.IsNullOrEmpty(ca.ProjectDirectory))
       {
-        composeArgs += $" --project-directory {ca.ProjectDirectory.Rendered}";
+        composeArgs += $" --project-directory \"{ca.ProjectDirectory.Rendered}\"";
       }
 
       var options = ca.NoStart ? "--no-start" : "--detach";
@@ -603,7 +603,7 @@ namespace Ductus.FluentDocker.Commands
             args += $" -f \"{cf}\"";
 
       if (!string.IsNullOrEmpty(altProjectName))
-        args += $" -p {altProjectName}";
+        args += $" -p \"{altProjectName}\"";
 
       var options = string.Empty;
       options += " -f"; // Don't ask to confirm removal
@@ -639,7 +639,7 @@ namespace Ductus.FluentDocker.Commands
             args += $" -f \"{cf}\"";
 
       if (!string.IsNullOrEmpty(altProjectName))
-        args += $" -p {altProjectName}";
+        args += $" -p \"{altProjectName}\"";
 
       var options = string.Empty;
       if (null != services && 0 != services.Length)
@@ -676,7 +676,7 @@ namespace Ductus.FluentDocker.Commands
             args += $" -f \"{cf}\"";
 
       if (!string.IsNullOrEmpty(commandArgs.AltProjectName))
-        args += $" -p {commandArgs.AltProjectName}";
+        args += $" -p \"{commandArgs.AltProjectName}\"";
 
       var options = string.Empty;
       if (commandArgs.DownloadAllTagged)

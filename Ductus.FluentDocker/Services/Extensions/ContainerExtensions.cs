@@ -23,10 +23,10 @@ namespace Ductus.FluentDocker.Services.Extensions
     /// <param name="follow">If continuous logs is wanted.</param>
     /// <param name="token">The cancellation token for logs, especially needed when <paramref name="follow" /> is set to true.</param>
     /// <returns>A console stream to consume.</returns>
-    public static ConsoleStream<string> Logs(this IContainerService service, bool follow = false,
+    public static ConsoleStream<string> Logs(this IContainerService service, bool follow = false, bool showTimeStamps = false,
       CancellationToken token = default)
     {
-      return service.DockerHost.Logs(service.Id, token, follow);
+      return service.DockerHost.Logs(service.Id, token, follow, showTimeStamps);
     }
 
     /// <summary>
