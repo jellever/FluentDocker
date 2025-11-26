@@ -30,7 +30,9 @@ namespace Ductus.FluentDocker.Executors
         UseShellExecute = false,
         Arguments = _arguments,
         FileName = _command,
-        WorkingDirectory = _workingdir
+        WorkingDirectory = _workingdir,
+        StandardErrorEncoding = System.Text.Encoding.UTF8,
+        StandardOutputEncoding = System.Text.Encoding.UTF8,
       }, new T(), token);
     }
   }
