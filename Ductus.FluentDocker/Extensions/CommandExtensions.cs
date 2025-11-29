@@ -83,6 +83,21 @@ namespace Ductus.FluentDocker.Extensions
       _binaryResolver = new DockerBinariesResolver(_sudoMechanism, _sudoPassword);
     }
 
+    public static void FixSudoCommand(string command, string arguments, out string fixedCommand, out string fixedArguments)
+    {
+      if (command.StartsWith("echo") || command.StartsWith("sudo"))
+      {
+        fixedCommand = CommandExtensions.DefaultShell;
+        string escapedArguments = arguments.Replace("\"", "\"\\\"\"");
+        fixedArguments = $"-c \"{command} {escapedArguments}\"";
+      }
+      else
+      {
+        fixedCommand = command;
+        fixedArguments = arguments;
+      }
+    }
+
     public static string ResolveBinary(this string dockerCommand, bool preferMachine = false, bool forceResolve = false)
     {
       if (forceResolve || null == _binaryResolver)

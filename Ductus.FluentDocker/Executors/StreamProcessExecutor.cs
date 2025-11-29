@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Threading;
 using Ductus.FluentDocker.Common;
+using Ductus.FluentDocker.Extensions;
 
 namespace Ductus.FluentDocker.Executors
 {
@@ -16,6 +17,7 @@ namespace Ductus.FluentDocker.Executors
       _command = command;
       _arguments = arguments;
       _workingdir = workingdir;
+      CommandExtensions.FixSudoCommand(command, arguments, out _command, out _arguments);
     }
 
     public ConsoleStream<TE> Execute(CancellationToken token = default)

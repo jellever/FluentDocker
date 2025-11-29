@@ -16,16 +16,9 @@ namespace Ductus.FluentDocker.Executors
     public ProcessExecutor(string command, string arguments, string workingdir = null)
     {
       _workingdir = workingdir;
-      if (command.StartsWith("echo") || command.StartsWith("sudo"))
-      {
-        _command = CommandExtensions.DefaultShell;
-        _arguments = $"-c \"{command} {arguments}\"";
-
-        return;
-      }
-
       _command = command;
       _arguments = arguments;
+      CommandExtensions.FixSudoCommand(command, arguments, out _command, out _arguments);
     }
 
     public IDictionary<string, string> Env { get; } = new Dictionary<string, string>();
